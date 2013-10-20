@@ -5,6 +5,7 @@
 
 var express = require('express');
 var routes = require('./routes');
+var partials = require('./routes/partials');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
@@ -27,6 +28,7 @@ app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(routes.index);
 
 // development only
 if ('development' == app.get('env')) {
@@ -34,6 +36,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/partials/stocks', partials.stocks);
 app.get('/users', user.list);
 
 io.sockets.on('connection', function(socket) {

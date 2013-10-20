@@ -1,0 +1,12 @@
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+  </tr>
+  {{#each stocks}}
+  <tr>
+    <td>{{this}}</td>
+    <td>[[stocks.{{this}}]]</td>
+  </tr>
+  {{/each}}
+</table>

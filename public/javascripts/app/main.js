@@ -1,23 +1,36 @@
-define(["jquery", "socket.io", "angular"], function($, io, ng) {
+define(["jquery", "socket.io", "angular"], function($, io, angular) {
   var socket = io.connect('/');
-  var ncApp = ng.module('ncApp', [], function($interpolateProvider) {
-    $interpolateProvider.startSymbol('[[');
-    $interpolateProvider.endSymbol(']]');
-  });
+  var ncApp = angular.module('ncApp', [],
+    function($routeProvider, $interpolateProvider) {
+      $interpolateProvider.startSymbol('[[');
+      $interpolateProvider.endSymbol(']]');
+      $routeProvider.
+        when('/stocks', {
+          templateUrl: '/partials/stocks',
+          controller: 'StockMarketCtrl'
+        }).
+        otherwise({
+          redirectTo: '/stocks'
+        });
+    }
+  );
 
   ncApp.controller('StockMarketCtrl', function StockMarketCtrl($scope) {
-    $scope.stocks = {};
+    //$scope.stocks = {};
+  });
+
+  ncApp.run(function ($rootScope) {
+    $rootScope.stocks={};
     socket.on('stocks', function(data) {
-      $scope.$apply(function() {
+      $rootScope.$apply(function() {
         for (var stock in data) {
-          $scope.stocks[stock] = data[stock];
+          $rootScope.stocks[stock] = data[stock];
         }
       });
     });
-
   });
 
-  ng.bootstrap(document, ['ncApp']);
+  angular.bootstrap(document, ['ncApp']);
 
   $('body').append('<p>hello world!</p>');
 });
