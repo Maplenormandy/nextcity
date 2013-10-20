@@ -1,0 +1,12 @@
+<div ng-controller="StockMarketCtrl">
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+    </tr>
+    <tr ng-repeat="(name, price) in stocks">
+      <td>[[name]]</td>
+      <td>[[price]]</td>
+    </tr>
+  </table>
+</div>

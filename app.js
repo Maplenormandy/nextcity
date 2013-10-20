@@ -8,17 +8,17 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
-var hjs = require('hogan-express');
+var exphbs = require('express3-handlebars');
 
 var app = express();
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
-app.set('layout', 'layout');
-app.enable('view cache');
-app.engine('html', hjs);
+app.engine('.html', exphbs({defaultLayout:"main", extname:".html"}));
+app.set('view engine', '.html');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -36,6 +36,18 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+io.sockets.on('connection', function(socket) {
+  //socket.emit('news', {hello:'world'});
+});
+
+setInterval(function() {
+  var companies = ['msft','gm','appl','goog','f', 'fb'];
+  var comp = companies[(Math.random()*companies.length)>>>0];
+  var data = {};
+  data[comp] = 50+(Math.random()*100)>>>0;
+  io.sockets.emit('stocks', data);
+}, 1000);
+
+server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

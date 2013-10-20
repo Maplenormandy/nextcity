@@ -4,5 +4,5 @@
  */
 
 exports.index = function(req, res){
-  res.render('template', { partials: { content: "partials/hello" } });
+  res.render('index');
 };
