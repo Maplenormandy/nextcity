@@ -49,7 +49,7 @@ setInterval(function() {
   var data = {};
   data[comp] = 50+(Math.random()*100)>>>0;
   io.sockets.emit('stocks', data);
-}, 1000);
+}, 200);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
